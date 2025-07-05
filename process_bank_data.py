@@ -89,16 +89,13 @@ def preprocess_new_data(new_df, input_cols, numeric_cols, categorical_cols, scal
     Applies preprocessing to new (unseen) data using existing fitted scaler and encoder.
     """
     inputs = new_df[input_cols].copy()
-    
-    # Масштабируем числовые колонки
+
     inputs[numeric_cols] = scaler.transform(inputs[numeric_cols])
     
-    # One-hot энкодинг категориальных признаков
     encoded = encoder.transform(inputs[categorical_cols])
     encoded_cols = list(encoder.get_feature_names_out(categorical_cols))
     encoded_df = pd.DataFrame(encoded, columns=encoded_cols, index=inputs.index)
     
-    # Объединяем числовые и закодированные категориальные признаки
     result_inputs = pd.concat([inputs[numeric_cols], encoded_df], axis=1)
     
     return result_inputs
